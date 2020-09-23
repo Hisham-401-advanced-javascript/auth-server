@@ -1,6 +1,6 @@
 'use strict';
 
-function errorHandler (err, req, res, next){
+function errorHandler (err, req, res){
   let error = { error: err };
   res.statusCode = 500;
   res.statusMessage = 'Server Error';

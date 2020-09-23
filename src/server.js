@@ -1,57 +1,26 @@
 'use strict';
 
-// =============================================================================
-// Libraries
 const express = require('express');
-
-require('dotenv').config();
-const app = express();
-// const cors = require('cors');
+const cors = require('cors');
 const morgan = require('morgan');
+const app = express();
+const err500 = require('./middleware/500.js');
+const err404 = require('./middleware/404.js');
+const userRouters = require('./auth/router');
 
-const notFound = require('./middleware/404.js');
-const serverError = require('./middleware/500.js');
-
-// =============================================================================
-// Import Routes
-
-const router = require('./auth/router.js');
-
-// =============================================================================
-// Global Middleware
-
-app.use(express.json());
-// app.use(cors());
+app.use(express.json()); // body
+app.use(cors());
 app.use(morgan('dev'));
+app.use(userRouters);
 
-// =============================================================================
-// Custom Routes
+// Global ERROR MiddleWare
+app.use('*',err404); // 404
+app.use(err500); //500
 
-app.use('/', router);
-
-// =============================================================================
-//JS Error Test Route
-
-app.get('/bad', (req, res) => {
-  throw new Error('No bueno');
-});
-
-//============================================================================
-
-// Error Routes
-
-// 404 Errors
-app.use('*', notFound);
-
-// 500 Errors/Failsafe
-app.use(serverError);
-
-// =============================================================================
-// Export
 module.exports = {
   server: app,
-  start: port => {
-    const PORT = port || process.env.PORT ||3000;
-    app.listen(PORT, ()=> console.log(`listening on ${PORT}`));
+  start: (port) => {
+    const PORT = port || process.env.PORT || 3000;
+    app.listen(PORT, () => { console.log(`Listening on port ${PORT}`); });
   },
 };
