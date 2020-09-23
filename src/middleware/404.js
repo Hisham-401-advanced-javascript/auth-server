@@ -1,6 +1,6 @@
 'use strict';
 
-function notFound(req, res, next){
+function notFound(req, res){
   let error = { error: 'Resource Not Found' };
   res.statusCode = 404;
   res.statusMessage = 'Not Found';
