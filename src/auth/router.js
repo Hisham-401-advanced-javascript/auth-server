@@ -23,13 +23,13 @@ router.get('/oauth', oath, (req, res)=> {
  * @param {obj} res
  * @param {function} next
  */
-function signup(req, res) {
+function signup(req, res, next) {
   //sign up route if we have the user, return failure, else return generated token.
   let user = req.body;
   console.log(user);
   users.save(user).then(result => {
     // generate a token and return it.
-    let token = users.generateToken(result);
+    let token = users.generateTokenUp(result);
     res.cookie(token);
     res.status(200).send(token);
   }).catch(err=> {
@@ -44,7 +44,7 @@ function signup(req, res) {
  * @param {function} next
  */
 // check this username if the password submitted matches the encrypted one we have saved in our db
-function signin(req, res) {
+function signin(req, res , next) {
   res.cookie(req.token);
   res.status(200).send(req.token); // return token 4
 }

@@ -8,6 +8,12 @@ const mongoDB = require('./models/users-model');
 // let obj={}; //db
 let users = {}; //exporting
 
+let roles = {
+  user: ['read'],
+  writers: ['read', 'create'],
+  editor: ['read', 'update', 'create'],
+  admin : ['read', 'update', 'create', 'delete'],
+};
 
 /**
  * @param(obj)
@@ -17,7 +23,8 @@ users.save = async function (record) {
   if (!reading[0]) {
     console.log(record.password);
     record.password  = await bcrypt.hash(record.password,5);
-    await mongoDB.create(record);
+    let test = await mongoDB.create(record);
+    console.log('signup test',test);
     return record;
   }
   // let addNewNote =await mongoDB.create(record);
@@ -42,8 +49,22 @@ users.authenticateBasic = async function(username, password) {
 /**
  * @param(obj)
  */
-users.generateToken = function (user) {
-  let token = jwt.sign({username: user.username}, secret,{expiresIn:900} );
+users.generateTokenUp =  function (user) {
+  // ,{expiresIn:900}
+  console.log('user >>>>>>>>>',user);
+  console.log('roles >>>>>>>>>>',roles[user.role]);
+  let token = jwt.sign({username: user.username , capabilities: roles[user.role]},secret, {expiresIn:900} );
+  console.log('tooken >>>>>>>>>>>',token);
+  return token;
+};
+
+users.generateTokenIn =  async function (user) {
+  let reading =  await mongoDB.read(user);
+  console.log('generate token >>>>>>>>>',reading[0].role);
+  let username =  user;
+  let capabilities = roles[reading[0].role] || user.role;
+  // ,{expiresIn:900}
+  let token = await jwt.sign({username: username , capabilities: capabilities}, secret , {expiresIn:900} );
   console.log(token);
   return token;
 };
@@ -62,10 +83,14 @@ users.verifyToken = function (token) {
       return Promise.reject(err);
     }
 
-    console.log('decoded >>>> ',decoded); // {username: usernameValue, ...}
-    console.log('decoded >>>> ',decoded.username); // {username: usernameValue, ...}
-    let username = decoded['username']; // decoded.username
-    console.log('username >>>>>>>>>>>>>>>>>>>>>>>',username);
+    // console.log('decoded >>>> ',decoded); // {username: usernameValue, ...}
+    // console.log('decoded >>>> ',decoded.username); // {username: usernameValue, ...}
+    // let username = decoded['username']; // decoded.username
+    // console.log('username >>>>>>>>>>>>>>>>>>>>>>>',username);
+
+    let username = decoded.username.username; // decoded.username
+    // console.log('@@@@@@@@@@@sdfdsfdsafafs@@@@@@@@@',username);
+    console.log('decoded >>>> ',username); // {username: usernameValue, ...}
 
     let reading = await mongoDB.read(username);
     console.log('');
