@@ -26,8 +26,8 @@ class Model {
      * @return {*}
      */
   create(record) {
-    let newRecord = new this.schema(record);
-    return newRecord.save();
+    let NewRecord = new this.schema(record);
+    return NewRecord.save();
   }
   /**
      *

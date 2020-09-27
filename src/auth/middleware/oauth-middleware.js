@@ -9,7 +9,7 @@ const TOKEN_SERVER_URL = process.env.TOKEN_SERVER_URL;
 const REMOTE_USER_API = process.env.REMOTE_USER_API;
 const API_SERVER = 'http://localhost:3000/oauth'; 
 
-module.exports = async (req, res, next)=> {
+module.exports = async (req, res, next) => {
   // we will do all steps
   // 1- login superagent, get the token
   // 2- i have the token, take the token and give me back the user

@@ -1,7 +1,7 @@
 'use strict';
 
 const express = require('express');
-const router = express.Router();
+const router = express.router();
 const users = require('./users');
 const basicAuth = require('./middleware/basic-auth-middleware');
 const oath = require('./middleware/oauth-middleware');
@@ -14,12 +14,12 @@ router.get('/oauth', oath, (req, res)=> {
   res.status(200).send(req.token);
 });
 /**
- * 
- * @param {obj} req 
- * @param {obj} res 
- * @param {function} next 
+ *
+ * @param {obj} req
+ * @param {obj} res
+ * @param {function} next
  */
-function signup(req, res, next) {
+function signup(req, res) {
   //sign up route if we have the user, return failure, else return generated token.
   let user = req.body;
   console.log(user);
@@ -29,34 +29,34 @@ function signup(req, res, next) {
     res.cookie(token);
     res.status(200).send(token);
   }).catch(err=> {
-    console.log('ERR!!');
+    console.log('ERR!!' , err);
     res.status(403).send('Invalid Signup! email is taken');
   });
 }
 
 /**
- * @param {obj} req 
- * @param {obj} res 
- * @param {function} next 
+ * @param {obj} req
+ * @param {obj} res
+ * @param {function} next
  */
 // check this username if the password submitted matches the encrypted one we have saved in our db
-function signin(req, res, next) {
+function signin(req, res) {
   res.cookie(req.token);
   res.status(200).send(req.token); // return token 4
 }
 
 /**
- * @param {obj} req 
- * @param {obj} res 
- * @param {function} next 
+ * @param {obj} req
+ * @param {obj} res
+ * @param {function} next
  */
-function list(req, res, next) {
+function list(res) {
   users.list(undefined).then(result => {
     console.log('prove of life');
     console.log(result);
     res.status(200).send(result);
   }).catch(err=> {
-    console.log('ERR!!');
+    console.log('ERR!!' , err);
     res.status(403).send('Listing error');
   });
 }
