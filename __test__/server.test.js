@@ -5,13 +5,13 @@ const { server } = require('../src/server');
 const mockRequest = supergoose(server);
 
 describe('Server API', ()=> {
-  it('should respond with 500', ()=> {
+  it('should respond with 500', ()=> {   
     return mockRequest.get('/bad')
       .then(results=> {
         expect(results.status).toBe(500);
       }).catch(console.error);
   });
-
+    
   it('should respond 404 of an invalid route',() => {
     return mockRequest
       .get('/invalidroute')
@@ -19,7 +19,7 @@ describe('Server API', ()=> {
         expect(results.status).toBe(404);
       }).catch(console.log);
   });
-
+    
   it('should respond properly /users', ()=> {
     return mockRequest
       .get('/users')
@@ -27,7 +27,7 @@ describe('Server API', ()=> {
         expect(results.status).toBe(200);
       });
   });
-
+ 
   it('TEST post() /list ', ()=> {
     let obj = {name: 'test-post-1'};
     return mockRequest

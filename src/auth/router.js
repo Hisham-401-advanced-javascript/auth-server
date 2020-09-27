@@ -1,7 +1,7 @@
 'use strict';
 
 const express = require('express');
-const router = express.router();
+const router = express.Router();
 const users = require('./users');
 const basicAuth = require('./middleware/basic-auth-middleware');
 const oath = require('./middleware/oauth-middleware');
@@ -57,7 +57,7 @@ function list(res) {
     res.status(200).send(result);
   }).catch(err=> {
     console.log('ERR!!' , err);
-    res.status(403).send('Listing error');
+    res.status(404).send('Listing error');
   });
 }
 
