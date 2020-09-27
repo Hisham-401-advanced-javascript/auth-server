@@ -7,6 +7,10 @@ const basicAuth = require('./middleware/basic-auth-middleware');
 const oath = require('./middleware/oauth-middleware');
 // const mongoDB = require('./models/users/users-model');
 
+// router.post('/signup',(res,req) => {
+//   console.log("testetstetstetstetst");
+// });
+
 router.post('/signup',signup);
 router.post('/signin',basicAuth,signin);
 router.get('/users',list);
@@ -50,7 +54,7 @@ function signin(req, res) {
  * @param {obj} res
  * @param {function} next
  */
-function list(res) {
+function list(req, res) {
   users.list(undefined).then(result => {
     console.log('prove of life');
     console.log(result);

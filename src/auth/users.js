@@ -43,7 +43,8 @@ users.authenticateBasic = async function(username, password) {
  * @param(obj)
  */
 users.generateToken = function (user) {
-  let token = jwt.sign({username: user.username}, secret );
+  let token = jwt.sign({username: user.username}, secret,{expiresIn:900} );
+  console.log(token);
   return token;
 };
 
@@ -53,5 +54,27 @@ users.list = async function(record){
   return reading;
 };
 
+users.verifyToken = function (token) {
+  console.log('Token >>>>>>>>>>>>>>>>',token);
+  return  jwt.verify(token, secret,async function(err, decoded){
+    if (err) {
+      console.log('err>>> ', err);
+      return Promise.reject(err);
+    }
+
+    console.log('decoded >>>> ',decoded); // {username: usernameValue, ...}
+    console.log('decoded >>>> ',decoded.username); // {username: usernameValue, ...}
+    let username = decoded['username']; // decoded.username
+    console.log('username >>>>>>>>>>>>>>>>>>>>>>>',username);
+
+    let reading = await mongoDB.read(username);
+    console.log('');
+    console.log(reading);
+    if (reading[0]) {
+      return Promise.resolve(decoded);
+    } 
+    return Promise.reject();
+  });
+};
 
 module.exports = users;
