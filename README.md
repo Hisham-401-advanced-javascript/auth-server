@@ -49,6 +49,7 @@ This application was build with express Node.js framwork and it includes:
 
 # UML diagram
 ![image](./assets/uml-diagram.png)
+![image](./assets/lab12-UML.png)
 
 
 ## Change Log

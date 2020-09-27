@@ -4,12 +4,15 @@ const express = require('express');
 const router = express.Router();
 const users = require('./users');
 const basicAuth = require('./middleware/basic-auth-middleware');
+const oath = require('./middleware/oauth-middleware');
 // const mongoDB = require('./models/users/users-model');
 
 router.post('/signup',signup);
 router.post('/signin',basicAuth,signin);
 router.get('/users',list);
-
+router.get('/oauth', oath, (req, res)=> {
+  res.status(200).send(req.token);
+});
 /**
  *
  * @param {obj} req
@@ -26,7 +29,7 @@ function signup(req, res) {
     res.cookie(token);
     res.status(200).send(token);
   }).catch(err=> {
-    console.log('ERR!!>>>>>>>>' , err);
+    console.log('ERR!!' , err);
     res.status(403).send('Invalid Signup! email is taken');
   });
 }
@@ -37,7 +40,7 @@ function signup(req, res) {
  * @param {function} next
  */
 // check this username if the password submitted matches the encrypted one we have saved in our db
-function signin(req, res ) {
+function signin(req, res) {
   res.cookie(req.token);
   res.status(200).send(req.token); // return token 4
 }
@@ -47,15 +50,16 @@ function signin(req, res ) {
  * @param {obj} res
  * @param {function} next
  */
-function list(req, res ) {
+function list(res) {
   users.list(undefined).then(result => {
     console.log('prove of life');
     console.log(result);
     res.status(200).send(result);
   }).catch(err=> {
     console.log('ERR!!' , err);
-    res.status(403).send('Listing error');
+    res.status(404).send('Listing error');
   });
 }
+
 
 module.exports = router;

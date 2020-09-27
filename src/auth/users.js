@@ -12,7 +12,7 @@ let users = {}; //exporting
 /**
  * @param(obj)
  */
-users.save = async function (record){
+users.save = async function (record) {
   let reading = await mongoDB.read(record.username);
   if (!reading[0]) {
     console.log(record.password);
